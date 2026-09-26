@@ -1,0 +1,6 @@
+{
+  "name": "Engagement Ceremony Invitation & RSVP",
+  "description": "Interactive luxury engagement ceremony invitation featuring an animated embossed envelope with wax seal, interactive scratch-to-reveal date cards, ceremony timeline, and full RSVP tracking system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
