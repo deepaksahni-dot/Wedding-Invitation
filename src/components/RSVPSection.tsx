@@ -79,7 +79,7 @@ export const RSVPSection: React.FC<RSVPSectionProps> = ({
           RSVP for the Ceremony
         </h2>
         <p className="text-xs text-[#69533B] mt-1">
-          Kindly RSVP by November 25, 2026 to celebrate with {details.brideName} &amp; {details.groomName}
+          Kindly RSVP by Nov 25, 2026 to celebrate with {details.brideName} &amp; {details.groomName}
         </p>
         <div className="w-16 h-0.5 bg-[#D4AF37] mx-auto mt-3" />
       </div>

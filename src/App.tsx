@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Sparkles,
   RotateCcw,
-  Users,
   Edit3,
-  Heart,
   ChevronUp
 } from 'lucide-react';
-import { CeremonyDetails, RSVPRecord } from './types';
+import { CeremonyDetails } from './types';
 import { Envelope } from './components/Envelope';
 import { InvitationCard } from './components/InvitationCard';
-import { RSVPSection } from './components/RSVPSection';
-import { RSVPTrackerModal } from './components/RSVPTrackerModal';
 import { EditCeremonyModal } from './components/EditCeremonyModal';
 import { MusicPlayerButton } from './components/MusicPlayerButton';
 import warmPampasBg from './assets/images/warm_pampas_bg_1789386863101.jpg';
@@ -26,9 +21,9 @@ const INITIAL_CEREMONY_DETAILS: CeremonyDetails = {
   monogram: 'P & A',
   eventDate: {
     day: '13',
-    month: 'NOVEMBER',
+    month: 'Nov',
     year: '2026',
-    fullDateString: 'Friday, November 13, 2026',
+    fullDateString: 'Friday, Nov 13, 2026',
     time: '',
   },
   venue: {
@@ -40,68 +35,6 @@ const INITIAL_CEREMONY_DETAILS: CeremonyDetails = {
   welcomeMessage: 'With the divine blessings of Lord Ganesha and our elders, we cordially invite you to the auspicious engagement ceremony of Priyanshi with Aashutosh.',
   invitationNote: 'Join us for an auspicious morning and afternoon of love, joyous laughter, sacred blessings, and memorable celebrations as we celebrate their engagement and embark on this beautiful new journey.',
 };
-
-const INITIAL_RSVPS: RSVPRecord[] = [
-  {
-    id: 'rsvp-1',
-    fullName: 'Uncle Rajesh & Aunt Sunita Singhal',
-    email: 'rajesh.singhal@example.com',
-    phone: '+91 98112 34567',
-    attendance: 'attending',
-    guestCount: 3,
-    guestNames: 'Rajesh Singhal, Sunita Singhal, Rohan Singhal',
-    dietaryPreference: 'Pure Vegetarian',
-    message: 'Heartiest congratulations and heartfelt aashirwad to our dearest niece Priyanshi and Aashutosh! May Lord Ganesha shower your new journey with endless happiness, prosperity, and harmony.',
-    submittedAt: '2026-09-12 11:30',
-  },
-  {
-    id: 'rsvp-2',
-    fullName: 'Dr. Amit & Dr. Neha Sharma',
-    email: 'amit.sharma@example.com',
-    phone: '+91 98234 56789',
-    attendance: 'attending',
-    guestCount: 2,
-    guestNames: 'Amit Sharma, Neha Sharma',
-    dietaryPreference: 'Pure Vegetarian',
-    message: 'So delighted to celebrate this auspicious engagement! Sending all our love and warmest blessings to the Singhal and Nirwal families.',
-    submittedAt: '2026-09-13 09:15',
-  },
-  {
-    id: 'rsvp-3',
-    fullName: 'Vikram & Pooja Chaudhary',
-    email: 'vikram.c@example.com',
-    phone: '+91 98765 43210',
-    attendance: 'attending',
-    guestCount: 4,
-    guestNames: 'Vikram, Pooja, Aarav, Ananya',
-    dietaryPreference: 'Jain Vegetarian',
-    message: 'Looking forward to the sacred ring ceremony and grand afternoon lunch feast! Heartiest congratulations to Priyanshi and Aashutosh!',
-    submittedAt: '2026-09-13 13:40',
-  },
-  {
-    id: 'rsvp-4',
-    fullName: 'Sonia & Rahul Kapoor',
-    email: 'sonia.kapoor@example.com',
-    phone: '+91 99100 22334',
-    attendance: 'attending',
-    guestCount: 2,
-    guestNames: 'Sonia Kapoor, Rahul Kapoor',
-    dietaryPreference: 'Pure Vegetarian',
-    message: 'Wishing dear Priyanshi and Aashutosh a lifetime of happiness, togetherness, and cherished celebrations!',
-    submittedAt: '2026-09-14 02:20',
-  },
-  {
-    id: 'rsvp-5',
-    fullName: 'Anurag & Meera Verma',
-    email: 'anurag.verma@example.com',
-    phone: '+1 (555) 890-5566',
-    attendance: 'declined',
-    guestCount: 0,
-    dietaryPreference: 'No Restrictions',
-    message: 'Heartbroken we cannot travel for the engagement, but sending our warmest prayers and heartfelt congratulations from London!',
-    submittedAt: '2026-09-14 04:00',
-  },
-];
 
 export default function App() {
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
@@ -125,26 +58,11 @@ export default function App() {
     return INITIAL_CEREMONY_DETAILS;
   });
 
-  const [rsvps, setRsvps] = useState<RSVPRecord[]>(() => {
-    try {
-      const saved = localStorage.getItem('ceremony_rsvp_records_v6');
-      if (saved) return JSON.parse(saved);
-    } catch {
-      // ignore
-    }
-    return INITIAL_RSVPS;
-  });
-
-  const [isTrackerOpen, setIsTrackerOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('ceremony_invitation_details_v6', JSON.stringify(details));
   }, [details]);
-
-  useEffect(() => {
-    localStorage.setItem('ceremony_rsvp_records_v6', JSON.stringify(rsvps));
-  }, [rsvps]);
 
   const handleOpenEnvelope = () => {
     setIsEnvelopeOpen(true);
@@ -156,25 +74,6 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleAddRSVP = (newRecord: Omit<RSVPRecord, 'id' | 'submittedAt'>) => {
-    const fullRecord: RSVPRecord = {
-      ...newRecord,
-      id: 'rsvp-' + Date.now(),
-      submittedAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
-    };
-    setRsvps((prev) => [fullRecord, ...prev]);
-  };
-
-  const handleDeleteRSVP = (id: string) => {
-    setRsvps((prev) => prev.filter((r) => r.id !== id));
-  };
-
-  const scrollToRSVP = () => {
-    const elem = document.getElementById('rsvp-section-container');
-    if (elem) {
-      elem.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   return (
     <div className="min-h-screen bg-[#1A140F] text-[#FAF7F2] relative selection:bg-[#C5A059] selection:text-black">
@@ -233,16 +132,6 @@ export default function App() {
               <Edit3 className="w-3.5 h-3.5 text-[#F5D88A]" />
               <span className="hidden sm:inline">Customize</span>
             </button>
-
-            <button
-              id="open-rsvp-tracker-top-btn"
-              onClick={() => setIsTrackerOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#C5A059] hover:bg-[#A8823B] text-white text-xs font-cinzel font-semibold transition-colors cursor-pointer shadow-sm"
-              title="View all guest RSVPs, catering breakdown and export CSV"
-            >
-              <Users className="w-3.5 h-3.5" />
-              <span>RSVP Tracker ({rsvps.filter((r) => r.attendance === 'attending').length})</span>
-            </button>
           </div>
         </div>
       </header>
@@ -251,7 +140,7 @@ export default function App() {
       <main className="relative z-10 py-6 sm:py-10 px-3 flex flex-col items-center">
         <AnimatePresence mode="wait">
           {!isEnvelopeOpen ? (
-            /* Screen 1: Unopened Embossed Envelope with Wax Seal (00:00 - 00:06) */
+            /* Screen 1: Unopened Embossed Envelope with Wax Seal */
             <motion.div
               key="envelope-view"
               initial={{ opacity: 0, scale: 0.98 }}
@@ -269,7 +158,7 @@ export default function App() {
               />
             </motion.div>
           ) : (
-            /* Screen 2: Opened Full Invitation with Ceremony Video (00:09 - 00:19) */
+            /* Screen 2: Opened Full Invitation */
             <motion.div
               key="invitation-view"
               initial={{ opacity: 0, scale: 0.98 }}
@@ -277,18 +166,9 @@ export default function App() {
               transition={{ duration: 0.6, ease: 'easeOut' }}
               className="w-full flex flex-col items-center space-y-6"
             >
-              {/* Full Invitation Card with Royal Couple Hero, Scratchable Date, Timeline & Venue */}
+              {/* Full Invitation Card */}
               <InvitationCard
                 details={details}
-                onNavigateToRSVP={scrollToRSVP}
-                onOpenTracker={() => setIsTrackerOpen(true)}
-              />
-
-              {/* RSVP Form Section */}
-              <RSVPSection
-                details={details}
-                onRSVPSubmit={handleAddRSVP}
-                onOpenTracker={() => setIsTrackerOpen(true)}
               />
 
               {/* Scroll To Top Helper */}
@@ -304,17 +184,8 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {/* Background Royal Ambient Music Player (Gold Floating Button at Bottom Right matching Video) */}
+      {/* Background Royal Ambient Music Player */}
       <MusicPlayerButton autoStart={shouldAutoPlayMusic} />
-
-      {/* RSVP Tracker Host Dashboard Modal */}
-      <RSVPTrackerModal
-        isOpen={isTrackerOpen}
-        onClose={() => setIsTrackerOpen(false)}
-        rsvps={rsvps}
-        onDeleteRSVP={handleDeleteRSVP}
-        onAddManualRSVP={handleAddRSVP}
-      />
 
       {/* Ceremony Personalization Modal */}
       <EditCeremonyModal

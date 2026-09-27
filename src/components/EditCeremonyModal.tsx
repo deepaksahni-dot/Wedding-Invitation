@@ -153,7 +153,7 @@ export const EditCeremonyModal: React.FC<EditCeremonyModalProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-[10px] text-[#695239]">Month (e.g. NOVEMBER)</label>
+                <label className="block text-[10px] text-[#695239]">Month (e.g. NOV)</label>
                 <input
                   type="text"
                   value={formData.eventDate.month}
