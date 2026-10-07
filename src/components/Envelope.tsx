@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
 import { Sparkles, Heart } from 'lucide-react';
 import embossedBg from '../assets/images/embossed_envelope_texture_1789386146755.jpg';
-import { royalMusic } from '../utils/audio';
 
 interface EnvelopeProps {
   monogram: string;
@@ -35,12 +34,10 @@ export const Envelope: React.FC<EnvelopeProps> = ({
 
     // 1. Tactile press phase
     setPhase('pressing');
-    royalMusic.playSealTap();
 
     // 2. Glowing phase: golden light bursts from seal & seams
     setTimeout(() => {
       setPhase('glowing');
-      royalMusic.playGlowBurst();
 
       // Delicate golden confetti shimmer
       confetti({
@@ -333,17 +330,17 @@ export const Envelope: React.FC<EnvelopeProps> = ({
                   transition={{ duration: 0.3 }}
                   className="mt-6 flex flex-col items-center text-center px-4"
                 >
-                  <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#FAF7F2]/95 backdrop-blur-md border border-[#C5A059]/50 shadow-sm">
-                    <Heart className="w-3 h-3 text-[#C5A059] fill-[#C5A059]" />
-                    <span className="font-cinzel text-xs tracking-widest text-[#5C451D] font-bold uppercase">
+                  <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#1C1713]/90 backdrop-blur-md border border-[#D4AF37]/60 shadow-md">
+                    <Heart className="w-3 h-3 text-[#F5D88A] fill-[#F5D88A]" />
+                    <span className="font-cinzel text-xs tracking-widest text-[#FFE8B3] font-bold uppercase">
                       Tap Seal to Open
                     </span>
-                    <Heart className="w-3 h-3 text-[#C5A059] fill-[#C5A059]" />
+                    <Heart className="w-3 h-3 text-[#F5D88A] fill-[#F5D88A]" />
                   </div>
-                  <p className="mt-2.5 text-[11px] text-[#4A3B28] font-medium tracking-wide">
+                  <p className="mt-3 text-xs font-cinzel font-bold tracking-[0.2em] text-[#FFE6AD] uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
                     Engagement Ceremony of
                   </p>
-                  <p className="font-cormorant text-base font-bold text-[#2B2317] italic">
+                  <p className="font-cormorant text-2xl sm:text-3xl font-bold text-[#FFF8E7] drop-shadow-[0_3px_8px_rgba(0,0,0,0.95)] italic mt-0.5 tracking-wide">
                     {brideName} &amp; {groomName}
                   </p>
                 </motion.div>

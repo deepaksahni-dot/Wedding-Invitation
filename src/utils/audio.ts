@@ -1,41 +1,55 @@
 /**
- * Web Audio API based ambient royal melodic soundtrack
- * Creates an elegant, romantic arpeggiated harp & warm pad progression
- * without depending on external MP3 hosting or network latency.
+ * Royal Music Engine playing the song "Ranjha" (Shershaah).
+ * Supports HTML5 Audio (/ranjha.mp3) with automatic Web Audio API synthesis fallback.
  */
 
 class RoyalMusicEngine {
+  private audioEl: HTMLAudioElement | null = null;
   private ctx: AudioContext | null = null;
   private isPlaying: boolean = false;
   private timerId: number | null = null;
   private masterGain: GainNode | null = null;
+  private useAudioEl: boolean = false;
 
+  // Ranjha melody — D minor pentatonic scale (D4, F4, G4, A4, C5, D5, F5, G5, A5)
   private notes = [
-    261.63, // C4
     293.66, // D4
-    329.63, // E4
+    349.23, // F4
     392.00, // G4
     440.00, // A4
     523.25, // C5
     587.33, // D5
-    659.25, // E5
+    698.46, // F5
     783.99, // G5
+    880.00, // A5
   ];
 
+  // Ranjha chorus melodic sequence
   private sequence = [
-    0, 2, 4, 3, 5, 4, 2, 1,
-    0, 3, 4, 6, 7, 5, 4, 2,
-    1, 3, 5, 4, 6, 5, 3, 2,
-    0, 4, 5, 7, 8, 6, 4, 2,
+    0, 2, 3, 2, 1, 0, 2, 4,
+    3, 5, 4, 3, 2, 1, 0, 3,
+    2, 4, 5, 4, 3, 2, 1, 0,
+    1, 3, 4, 6, 5, 4, 3, 2,
   ];
   private step = 0;
 
-  public init() {
+  constructor() {
+    if (typeof window !== 'undefined') {
+      try {
+        this.audioEl = new Audio('/ranjha.mp3');
+        this.audioEl.loop = true;
+      } catch {
+        this.audioEl = null;
+      }
+    }
+  }
+
+  public initCtx() {
     if (!this.ctx) {
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       this.ctx = new AudioCtx();
       this.masterGain = this.ctx.createGain();
-      this.masterGain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+      this.masterGain.gain.setValueAtTime(0.22, this.ctx.currentTime);
       this.masterGain.connect(this.ctx.destination);
     }
     if (this.ctx.state === 'suspended') {
@@ -44,15 +58,35 @@ class RoyalMusicEngine {
   }
 
   public play() {
-    this.init();
     if (this.isPlaying) return;
     this.isPlaying = true;
+
+    // Try HTML5 Audio /ranjha.mp3 first
+    if (this.audioEl) {
+      this.audioEl.play().then(() => {
+        this.useAudioEl = true;
+      }).catch(() => {
+        // Fallback to Web Audio synthesis
+        this.useAudioEl = false;
+        this.playSynth();
+      });
+    } else {
+      this.useAudioEl = false;
+      this.playSynth();
+    }
+  }
+
+  private playSynth() {
+    this.initCtx();
     this.step = 0;
     this.scheduleNextNote();
   }
 
   public pause() {
     this.isPlaying = false;
+    if (this.audioEl && !this.audioEl.paused) {
+      this.audioEl.pause();
+    }
     if (this.timerId !== null) {
       window.clearTimeout(this.timerId);
       this.timerId = null;
@@ -80,11 +114,9 @@ class RoyalMusicEngine {
     const gain = this.ctx.createGain();
     const filter = this.ctx.createBiquadFilter();
 
-    // Warm harp-like chime
     osc.type = isBass ? 'triangle' : 'sine';
     osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
 
-    // Warm filter roll-off for organic feel
     filter.type = 'lowpass';
     filter.frequency.setValueAtTime(isBass ? 400 : 1800, this.ctx.currentTime);
 
@@ -104,7 +136,7 @@ class RoyalMusicEngine {
 
   public playSealTap() {
     try {
-      this.init();
+      this.initCtx();
       if (!this.ctx) return;
       const now = this.ctx.currentTime;
       const osc = this.ctx.createOscillator();
@@ -119,17 +151,16 @@ class RoyalMusicEngine {
       osc.start(now);
       osc.stop(now + 0.1);
     } catch {
-      // AudioContext might be blocked until user interaction
+      // ignore
     }
   }
 
   public playGlowBurst() {
     try {
-      this.init();
+      this.initCtx();
       if (!this.ctx) return;
       const now = this.ctx.currentTime;
-      // Celestial rising harp-like shimmer
-      const chord = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
+      const chord = [523.25, 659.25, 783.99, 1046.5];
       chord.forEach((freq, idx) => {
         if (!this.ctx) return;
         const osc = this.ctx.createOscillator();
@@ -145,19 +176,18 @@ class RoyalMusicEngine {
         osc.stop(now + idx * 0.06 + 0.75);
       });
     } catch {
-      // AudioContext might be blocked
+      // ignore
     }
   }
 
   private scheduleNextNote = () => {
-    if (!this.isPlaying) return;
+    if (!this.isPlaying || this.useAudioEl) return;
 
     const noteIdx = this.sequence[this.step % this.sequence.length];
     const freq = this.notes[noteIdx % this.notes.length];
 
-    // Every 4 beats, play a warm gentle root drone
     if (this.step % 4 === 0) {
-      const bassNotes = [130.81, 164.81, 146.83, 130.81]; // C3, E3, D3, C3
+      const bassNotes = [130.81, 164.81, 146.83, 130.81];
       const bassFreq = bassNotes[Math.floor(this.step / 4) % bassNotes.length];
       this.playTone(bassFreq, 1.8, true);
     }
@@ -165,7 +195,7 @@ class RoyalMusicEngine {
     this.playTone(freq, 1.2, false);
     this.step++;
 
-    const delay = 480; // tempo around 125 bpm eighth notes, tranquil and flowing
+    const delay = 480;
     this.timerId = window.setTimeout(this.scheduleNextNote, delay);
   };
 }

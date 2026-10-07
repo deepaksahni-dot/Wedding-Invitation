@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   RotateCcw,
-  Edit3,
   ChevronUp
 } from 'lucide-react';
 import { CeremonyDetails } from './types';
 import { Envelope } from './components/Envelope';
 import { InvitationCard } from './components/InvitationCard';
-import { EditCeremonyModal } from './components/EditCeremonyModal';
 import { MusicPlayerButton } from './components/MusicPlayerButton';
 import warmPampasBg from './assets/images/warm_pampas_bg_1789386863101.jpg';
 
@@ -39,30 +37,7 @@ const INITIAL_CEREMONY_DETAILS: CeremonyDetails = {
 export default function App() {
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [shouldAutoPlayMusic, setShouldAutoPlayMusic] = useState(false);
-  const [details, setDetails] = useState<CeremonyDetails>(() => {
-    try {
-      const saved = localStorage.getItem('ceremony_invitation_details_v6');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (
-          parsed.brideName === 'Priyanshi' &&
-          parsed.venue?.name === 'Hotel The Grand Cassel' &&
-          parsed.ceremonyType === 'Engagement Ceremony'
-        ) {
-          return parsed;
-        }
-      }
-    } catch {
-      // ignore
-    }
-    return INITIAL_CEREMONY_DETAILS;
-  });
-
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem('ceremony_invitation_details_v6', JSON.stringify(details));
-  }, [details]);
+  const [details] = useState<CeremonyDetails>(INITIAL_CEREMONY_DETAILS);
 
   const handleOpenEnvelope = () => {
     setIsEnvelopeOpen(true);
@@ -74,10 +49,9 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-
   return (
     <div className="min-h-screen bg-[#1A140F] text-[#FAF7F2] relative selection:bg-[#C5A059] selection:text-black">
-      {/* Warm Textured Golden-Brown / Pampas Grass Background Atmosphere matching reference */}
+      {/* Warm Textured Golden-Brown Background Atmosphere */}
       <div
         className="fixed inset-0 bg-cover bg-center pointer-events-none z-0 brightness-[0.92] contrast-[1.05]"
         style={{ backgroundImage: `url(${warmPampasBg})` }}
@@ -91,7 +65,7 @@ export default function App() {
         <div className="absolute bottom-10 right-10 w-[450px] h-[450px] bg-[#D4AF37]/10 rounded-full blur-[120px]" />
       </div>
 
-      {/* Top Floating Family & Host Navigation Bar */}
+      {/* Top Floating Navigation Bar */}
       <header className="sticky top-0 z-40 bg-[#1C1713]/90 backdrop-blur-md border-b border-[#C5A059]/30 py-2.5 px-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
           {/* Couple Monogram & Title */}
@@ -103,13 +77,13 @@ export default function App() {
               <div className="font-cinzel text-xs font-bold text-[#FFE6AD] tracking-wider">
                 {details.brideName} &amp; {details.groomName}
               </div>
-              <div className="text-[10px] text-[#A6874E] tracking-widest uppercase font-cinzel">
+              <div className="text-[10px] text-[#FFD98A] tracking-widest uppercase font-cinzel">
                 {details.ceremonyType}
               </div>
             </div>
           </div>
 
-          {/* Action Buttons for Host Family */}
+          {/* Action Buttons */}
           <div className="flex items-center gap-2">
             {isEnvelopeOpen && (
               <button
@@ -122,16 +96,6 @@ export default function App() {
                 <span>Re-seal</span>
               </button>
             )}
-
-            <button
-              id="edit-ceremony-details-btn"
-              onClick={() => setIsEditModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-[#D4AF37]/40 text-[#DEC8A2] hover:text-white text-xs font-cinzel transition-colors cursor-pointer"
-              title="Personalize names, dates and venue"
-            >
-              <Edit3 className="w-3.5 h-3.5 text-[#F5D88A]" />
-              <span className="hidden sm:inline">Customize</span>
-            </button>
           </div>
         </div>
       </header>
@@ -186,14 +150,6 @@ export default function App() {
 
       {/* Background Royal Ambient Music Player */}
       <MusicPlayerButton autoStart={shouldAutoPlayMusic} />
-
-      {/* Ceremony Personalization Modal */}
-      <EditCeremonyModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        details={details}
-        onSave={setDetails}
-      />
     </div>
   );
 }
