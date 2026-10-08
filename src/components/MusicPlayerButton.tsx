@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Volume2, VolumeX, Music } from 'lucide-react';
 
-const YOUTUBE_VIDEO_ID = 'V7LwfY5U5WI';
+const YOUTUBE_VIDEO_ID = 'sfyDlrl2kgw';
 
 interface MusicPlayerButtonProps {
   autoStart?: boolean;
@@ -33,14 +33,14 @@ export const MusicPlayerButton: React.FC<MusicPlayerButtonProps> = ({ autoStart 
         src={embedSrc}
         allow="autoplay"
         style={{ width: 0, height: 0, border: 'none', position: 'absolute', opacity: 0, pointerEvents: 'none' }}
-        title="Ranjha background music"
+        title="Background music"
       />
 
       {/* Song label pill */}
       {isPlaying && (
         <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1C1712]/90 backdrop-blur-md border border-[#C5A059]/40 text-[#F5E0A3] text-xs font-cinzel shadow-lg">
           <Music className="w-3 h-3 animate-bounce text-[#D4AF37]" />
-          <span>Ranjha ♪</span>
+          <span>Music ♪</span>
         </span>
       )}
 

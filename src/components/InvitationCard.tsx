@@ -31,8 +31,8 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
   const timelineItems: TimelineItem[] = [
     {
       time: '',
-      title: 'Ganesh Vandana & Tilak Ceremony',
-      description: 'Commencing with auspicious Vedic mantras and prayers to Lord Ganesha, followed by the Tilak rituals and seeking heartfelt blessings from beloved parents and elders.',
+      title: 'Tilak Ceremony',
+      description: 'Commencing with auspicious Tilak rituals and seeking heartfelt blessings from beloved parents and elders.',
       iconName: 'entrance',
     },
     {
