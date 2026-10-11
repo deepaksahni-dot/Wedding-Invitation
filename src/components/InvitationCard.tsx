@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import {
   Calendar,
+  Clock,
   MapPin,
   Sparkles,
   ExternalLink,
@@ -30,7 +31,7 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
 
   const timelineItems: TimelineItem[] = [
     {
-      time: '',
+      time: '10:00 AM',
       title: 'Tilak Ceremony',
       description: 'Commencing with auspicious Tilak rituals and seeking heartfelt blessings from beloved parents and elders.',
       iconName: 'entrance',
@@ -229,7 +230,13 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
           </button>
         </div>
 
-        {/* Time Badge - Removed */}
+        {/* Starting Time Badge */}
+        {details.eventDate.time && (
+          <div className="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F3ECE0] border border-[#D4AF37]/60 text-[#6B5539] text-xs font-cinzel font-semibold tracking-wider shadow-sm">
+            <Clock className="w-3.5 h-3.5 text-[#C5A059]" />
+            <span>Starting at {details.eventDate.time}</span>
+          </div>
+        )}
       </section>
 
       {/* Decorative Ornate Divider Arch */}
@@ -326,7 +333,13 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
                 <div className="w-2 h-2 rounded-full bg-[#8C6D32]" />
               </div>
 
-              {/* Time pill - Removed */}
+              {/* Time pill */}
+              {item.time && (
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#F3ECE0] border border-[#D4AF37]/50 text-[#8C6D32] text-[11px] font-cinzel font-bold tracking-wider w-fit mb-0.5">
+                  <Clock className="w-3 h-3 text-[#C5A059]" />
+                  <span>{item.time}</span>
+                </div>
+              )}
 
               {/* Title */}
               <h4 className="font-cormorant text-lg font-bold text-[#2A1F12] mt-0.5">

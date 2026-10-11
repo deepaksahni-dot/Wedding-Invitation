@@ -22,7 +22,7 @@ const INITIAL_CEREMONY_DETAILS: CeremonyDetails = {
     month: 'Nov',
     year: '2026',
     fullDateString: 'Friday, Nov 13, 2026',
-    time: '',
+    time: '10:00 AM',
   },
   venue: {
     name: 'Hotel The Grand Cassel',
